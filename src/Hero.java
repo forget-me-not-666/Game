@@ -1,16 +1,28 @@
 import java.awt.*;
 
 public class Hero {
+    final int JUMP_SPEED = -15;
     private int x = 100, y = 100;
-    private int speedX;
-    private int speedY;
+    private int jumpSpeedFactor = 1;
+    private int speedX = Const.SPEED;
+    private int speedY = Const.SPEED;
+
+    private boolean jumped = false, movingLeft = false, movingRight = false;
+
     private Direction direction = Direction.NON;
-    private Rectangle rec = new Rectangle(x, y, 100, 50);
+    private Rectangle rec = new Rectangle(x, y + Const.CHARACTER_HEIGHT - 10, Const.CHARACTER_WIDTH, 10);
 
     public void update() {
         x += speedX;
         y += speedY;
-        rec.setBounds(x, y, 10, 50);
+        rec.setBounds(x, y + Const.CHARACTER_HEIGHT - 10, Const.CHARACTER_WIDTH, 10);
+        collision();
+    }
+
+    private void collision() {
+        if (rec.contains(Main.floor)) {
+            y = Main.floor.y - Const.CHARACTER_HEIGHT;
+        }
     }
 
     public void moveRight() {
@@ -27,6 +39,24 @@ public class Hero {
         direction = Direction.NON;
         speedX = 0;
         speedY = 0;
+    }
+
+    public void jump() {
+        if (!jumped ) {
+            System.out.println(JUMP_SPEED * jumpSpeedFactor);
+            speedY = JUMP_SPEED * jumpSpeedFactor;
+            jumped = true;
+        }
+    }
+
+    public void stopRight(){
+        movingRight = false;
+        stop();
+    }
+
+    public void stopLeft(){
+        movingLeft = false;
+        stop();
     }
 
     public int getSpeedX() {
@@ -51,5 +81,13 @@ public class Hero {
 
     public Rectangle getRec() {
         return rec;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
     }
 }
