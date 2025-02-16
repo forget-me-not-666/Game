@@ -8,6 +8,7 @@ public class Main {
     public static Hero character = new Hero();
     static Floor floor = new Floor();
 
+
     private static int index = 0;
 
     public static void main(String[] args) {
@@ -56,9 +57,9 @@ public class Main {
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_D -> character.stop();
-                    case KeyEvent.VK_A -> character.stop();
+                    case KeyEvent.VK_D, KeyEvent.VK_A -> character.stop();
                     case KeyEvent.VK_SPACE -> {
+                        character.stop();
                         character.setMovingLeft(false);
                         character.setMovingRight(false);
                     }
@@ -68,7 +69,7 @@ public class Main {
 
         screen.add(panel);
 
-//        screen.addKeyListener(panel);
+//      screen.addKeyListener(panel);
 
 
         screen.setVisible(true);

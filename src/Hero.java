@@ -1,28 +1,32 @@
 import java.awt.*;
 
 public class Hero {
-    final int JUMP_SPEED = -15;
+    final int JUMP_SPEED = -10;
     private int x = 100, y = 100;
-    private int jumpSpeedFactor = 1;
-    private int speedX = Const.SPEED;
+    private int jumpSpeedFactor = 20;
+    private int speedX;
     private int speedY = Const.SPEED;
 
     private boolean jumped = false, movingLeft = false, movingRight = false;
 
     private Direction direction = Direction.NON;
-    private Rectangle rec = new Rectangle(x, y + Const.CHARACTER_HEIGHT - 10, Const.CHARACTER_WIDTH, 10);
+    private Rectangle floor = new Rectangle(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
+    private Rectangle first = new Rectangle(110, 194, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
 
     public void update() {
         x += speedX;
         y += speedY;
-        rec.setBounds(x, y + Const.CHARACTER_HEIGHT - 10, Const.CHARACTER_WIDTH, 10);
+        floor.setBounds(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
+        first.setBounds(0, 794, 124, 20);
         collision();
     }
 
     private void collision() {
-        if (rec.contains(Main.floor)) {
+        if (floor.intersects(Main.floor)) {
             y = Main.floor.y - Const.CHARACTER_HEIGHT;
+            floor.setBounds(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
         }
+
     }
 
     public void moveRight() {
@@ -32,7 +36,7 @@ public class Hero {
 
     public void moveLeft() {
         direction = Direction.LEFT;
-        speedY = Const.SPEED;
+        speedX = -Const.SPEED;
     }
 
     public void stop() {
@@ -42,34 +46,12 @@ public class Hero {
     }
 
     public void jump() {
-        if (!jumped ) {
-            System.out.println(JUMP_SPEED * jumpSpeedFactor);
-            speedY = JUMP_SPEED * jumpSpeedFactor;
+        if (!jumped) {
+            y -= jumpSpeedFactor;
             jumped = true;
         }
     }
 
-    public void stopRight(){
-        movingRight = false;
-        stop();
-    }
-
-    public void stopLeft(){
-        movingLeft = false;
-        stop();
-    }
-
-    public int getSpeedX() {
-        return speedX;
-    }
-
-    public int getSpeedY() {
-        return speedY;
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
 
     public int getX() {
         return x;
@@ -80,7 +62,11 @@ public class Hero {
     }
 
     public Rectangle getRec() {
-        return rec;
+        return floor;
+    }
+
+    public Rectangle getFirst() {
+        return first;
     }
 
     public void setMovingLeft(boolean movingLeft) {
