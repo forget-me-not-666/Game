@@ -1,57 +1,61 @@
 import java.awt.*;
 
+
 public class Hero {
-    final int JUMP_SPEED = -10;
-    private int x = 100, y = 100;
-    private int jumpSpeedFactor = 20;
+    private int x = 5, y = 300;
+    private int jumpSpeedFactor = 40;
     private int speedX;
     private int speedY = Const.SPEED;
 
-    private boolean jumped = false, movingLeft = false, movingRight = false;
+    private boolean jumped = false;
 
-    private Direction direction = Direction.NON;
-    private Rectangle floor = new Rectangle(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
-    private Rectangle first = new Rectangle(110, 194, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+    private Rectangle rec = new Rectangle(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
 
     public void update() {
         x += speedX;
         y += speedY;
-        floor.setBounds(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
-        first.setBounds(0, 794, 124, 20);
+        if(jumped && speedY < Const.SPEED) {
+            speedY += 1;
+        }
+        rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
         collision();
     }
 
     private void collision() {
-        if (floor.intersects(Main.floor)) {
+        if (rec.intersects(Main.floor)) {
             y = Main.floor.y - Const.CHARACTER_HEIGHT;
-            floor.setBounds(x, y + Const.CHARACTER_HEIGHT-20, Const.CHARACTER_WIDTH, 10);
+            rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+            jumped = false;
+            speedY = Const.SPEED;
         }
-
+        for(Rectangle plat : Panel.platforms){
+            if (rec.intersects(plat) && speedY >= 0) {
+                y = plat.y - Const.CHARACTER_HEIGHT;
+                rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+                jumped = false;
+                speedY = Const.SPEED;
+            }
+        }
     }
 
     public void moveRight() {
-        direction = Direction.RIGHT;
         speedX = Const.SPEED;
     }
 
     public void moveLeft() {
-        direction = Direction.LEFT;
         speedX = -Const.SPEED;
     }
 
     public void stop() {
-        direction = Direction.NON;
         speedX = 0;
-        speedY = 0;
     }
 
     public void jump() {
         if (!jumped) {
-            y -= jumpSpeedFactor;
+            speedY -= jumpSpeedFactor;
             jumped = true;
         }
     }
-
 
     public int getX() {
         return x;
@@ -62,18 +66,7 @@ public class Hero {
     }
 
     public Rectangle getRec() {
-        return floor;
+        return rec;
     }
 
-    public Rectangle getFirst() {
-        return first;
-    }
-
-    public void setMovingLeft(boolean movingLeft) {
-        this.movingLeft = movingLeft;
-    }
-
-    public void setMovingRight(boolean movingRight) {
-        this.movingRight = movingRight;
-    }
 }

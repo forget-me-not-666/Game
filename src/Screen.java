@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class Screen extends JFrame {
     public Screen() {

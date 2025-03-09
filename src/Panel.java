@@ -8,6 +8,7 @@ import java.io.IOException;
 public class Panel extends JPanel implements Runnable {
     private BufferedImage hero;
     private Image background = new ImageIcon("image/background.png").getImage();
+    static Rectangle[] platforms = new Rectangle[8];
 
 
     public Panel() {
@@ -16,12 +17,23 @@ public class Panel extends JPanel implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        platforms[0] = new Rectangle(-68, 795, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[1] = new Rectangle(481, 643, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[2] = new Rectangle(686, 882, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[3] = new Rectangle(885, 785, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[4] = new Rectangle(1091, 785, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[5] = new Rectangle(1296, 642, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[6] = new Rectangle(1500, 747, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
+        platforms[7] = new Rectangle(1687, 896, Const.PLATFORM_WIDTH, Const.PLATFORM_HEIGHT);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(background, 0, 0, null);
+        for (int i = 0; i < platforms.length; i++) {
+            g.drawRect(i==0 ? -68 : platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+        }
         if (hero != null)
             g.drawImage(hero, Main.character.getX(), Main.character.getY(), null);
         g.drawRect(Main.character.getRec().x, Main.character.getRec().y, Main.character.getRec().width, Main.character.getRec().height);
@@ -39,10 +51,12 @@ public class Panel extends JPanel implements Runnable {
                 update();
                 repaint();
 
-                Thread.sleep(100);
+                Thread.sleep(25);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 }
+
+
