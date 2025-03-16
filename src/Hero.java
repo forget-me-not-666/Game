@@ -9,7 +9,7 @@ public class Hero {
 
     private boolean jumped = false;
 
-    private Rectangle rec = new Rectangle(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+    private Rectangle rec = new Rectangle(x + 60, y + Const.CHARACTER_HEIGHT - 10, 60, 10);
 
     public void update() {
         x += speedX;
@@ -17,23 +17,29 @@ public class Hero {
         if(jumped && speedY < Const.SPEED) {
             speedY += 1;
         }
-        rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+        rec.setBounds(x + 60, y + Const.CHARACTER_HEIGHT - 10, 60, 10);
         collision();
     }
 
     private void collision() {
         if (rec.intersects(Main.floor)) {
             y = Main.floor.y - Const.CHARACTER_HEIGHT;
-            rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+            rec.setBounds(x + 60, y + Const.CHARACTER_HEIGHT - 10, 60, 10);
             jumped = false;
             speedY = Const.SPEED;
         }
         for(Rectangle plat : Panel.platforms){
             if (rec.intersects(plat) && speedY >= 0) {
                 y = plat.y - Const.CHARACTER_HEIGHT;
-                rec.setBounds(x + 80, y + Const.CHARACTER_HEIGHT - 10, 70, 10);
+                rec.setBounds(x + 60, y + Const.CHARACTER_HEIGHT - 10, 60, 10);
                 jumped = false;
                 speedY = Const.SPEED;
+            }
+        }
+        for(Rectangle star : Panel.stars){
+            if (rec.intersects(star)) {
+                star.setBounds(-100, -100, 0, 0);
+                star.isEmpty();
             }
         }
     }
